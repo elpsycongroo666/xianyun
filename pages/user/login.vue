@@ -1,13 +1,12 @@
 <template>
-  <div>登录</div>
+  <div>
+    登录
+  </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style>
-
 </style>
