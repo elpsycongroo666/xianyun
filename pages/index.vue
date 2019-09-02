@@ -70,7 +70,7 @@ export default {
         console.log(res);
         if (res.status === 200) {
           this.bannerImg = res.data.data;
-          console.log(this.bannerImg);
+          // console.log(this.bannerImg);
         }
       })
       .catch(err => {
