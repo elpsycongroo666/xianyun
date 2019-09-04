@@ -15,28 +15,8 @@
         <nuxt-link to="/hotel">酒店</nuxt-link>
         <nuxt-link to="/air">国内机票</nuxt-link>
       </el-row>
-
       <!-- 登录/用户信息 -->
       <el-row type="flex" align="middle">
-        <!-- 如果用户存在则展示用户信息，用户数据来自store -->
-        <el-dropdown v-if="false">
-          <el-row type="flex" align="middle" class="el-dropdown-link">
-            <nuxt-link to="#">
-              <img src="http://157.122.54.189:9093/images/pic_sea.jpeg" />
-              用户名
-            </nuxt-link>
-            <i class="el-icon-caret-bottom el-icon--right"></i>
-          </el-row>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>
-              <nuxt-link to="#">个人中心</nuxt-link>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <div @click="handleLogout">退出</div>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-
         <!-- 不存在用户信息展示登录注册链接 -->
         <div v-if="!$store.state.user.userInfo.token">
           <nuxt-link to="/user/login" class="account-link">登录/注册</nuxt-link>
@@ -51,7 +31,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>退出</el-dropdown-item>
+              <el-dropdown-item @click.native="handleClick">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -63,10 +43,17 @@
 export default {
   methods: {
     // 用户退出
-    handleLogout() {}
+    handleClick(){
+        // 清除登录信息
+        this.$store.commit('user/clearUserInfo');
+
+        this.$message({
+            type : "success",
+            message : '退出成功'
+        })
+    }
   },
   mounted(){
-      console.log(this.$store.state.user)
   }
 };
 </script>

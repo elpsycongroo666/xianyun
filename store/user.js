@@ -2,7 +2,7 @@
 // mutations 是同步修改state的数据
 
 // 用户管理
-export const state  = {
+export const state = {
     userInfo : {
         token : '',
         user : {}
@@ -14,5 +14,12 @@ export const mutations = {
     // data参数不是必须的，是调用方法时候传入的参数
     setUserInfo(state,data){
         state.userInfo = data
+    },
+    // 退出
+    clearUserInfo(state){
+        state.userInfo = {
+            token : '',
+            user : {}
+        }
     }
 }
