@@ -8,7 +8,7 @@
       <!-- 文档地址：https://element.eleme.cn/#/zh-CN/component/input#fu-he-xing-shu-ru-kuang -->
       <el-input placeholder="验证码" v-model="registerForm.captcha">
         <template slot="append">
-          <el-button>发送验证码</el-button>
+          <el-button @click="captchaSend">发送验证码</el-button>
         </template>
       </el-input>
     </el-form-item>
@@ -70,6 +70,24 @@ export default {
                     { validator : checkPassword , tirgger : 'blur' }
                 ]
             }
+        }
+    },
+    methods : {
+        // 发送验证码
+        captchaSend(){
+            this.$axios({
+                url : `/captchas`,
+                method : 'POST',
+                data : {
+                    tel : this.registerForm.username
+                }
+            }).then((res)=>{
+                // console.log(res)
+                // 使用对象的结构
+                const {code} = res.data
+                // 提示信息
+                this.$alert(`验证码已发送，注意查收`)
+            })
         }
     }
 };
