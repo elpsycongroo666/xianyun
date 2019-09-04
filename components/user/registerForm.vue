@@ -25,71 +25,90 @@
       <el-input placeholder="确认密码" type="password" v-model="registerForm.checkPassword"></el-input>
     </el-form-item>
 
-    <el-button class="submit" type="primary">注册</el-button>
+    <el-button class="submit" type="primary" @click="registerUser">注册</el-button>
   </el-form>
 </template>
 
 <script>
 export default {
-    data(){
-        // rule当前的规则，目前是空的
-        // value输入框的值
-        // callback是回调函数，必须要调用
-        const checkPassword = (rule,value,callback) => {
-            if(value === ''){
-                callback(new Error('请输入密码'))
-            }else if (value !== this.registerForm.password){
-                callback(new Error('两次输入密码不一致!'))
-            }else{
-                // 代表验证通过
-                callback();
-            }
+  data() {
+    // rule当前的规则，目前是空的
+    // value输入框的值
+    // callback是回调函数，必须要调用
+    const checkPassword = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else if (value !== this.registerForm.password) {
+        callback(new Error("两次输入密码不一致!"));
+      } else {
+        // 代表验证通过
+        callback();
+      }
+    };
+    return {
+      registerForm: {
+        username: "",
+        nickname: "",
+        captcha: "",
+        password: "",
+        checkPassword: ""
+      },
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" }
+        ],
+        nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
+        captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        checkPassword: [{ validator: checkPassword, tirgger: "blur" }]
+      }
+    };
+  },
+  methods: {
+    // 发送验证码
+    captchaSend() {
+      this.$axios({
+        url: `/captchas`,
+        method: "POST",
+        data: {
+          tel: this.registerForm.username
         }
-        return{
-            registerForm : {
-                username : '',
-                nickname : '',
-                captcha : '',
-                password : '',
-                checkPassword :''
-            },
-             rules : {
-                username : [
-                    { required : true, message : '请输入用户名' ,trigger : 'blur' }
-                ],
-                nickname : [
-                    { required : true, message : '请输入昵称' ,trigger : 'blur' }
-                ],
-                captcha : [
-                    { required : true, message : '请输入验证码' ,trigger : 'blur' }
-                ],
-                password : [
-                    { required : true, message : '请输入密码' ,trigger : 'blur' }
-                ],
-                checkPassword : [
-                    { validator : checkPassword , tirgger : 'blur' }
-                ]
-            }
-        }
+      }).then(res => {
+        // console.log(res)
+        // 使用对象的结构
+        const { code } = res.data;
+        // 提示信息
+        this.$alert(`验证码已发送，注意查收`);
+      });
     },
-    methods : {
-        // 发送验证码
-        captchaSend(){
-            this.$axios({
-                url : `/captchas`,
-                method : 'POST',
-                data : {
-                    tel : this.registerForm.username
-                }
-            }).then((res)=>{
-                // console.log(res)
-                // 使用对象的结构
-                const {code} = res.data
-                // 提示信息
-                this.$alert(`验证码已发送，注意查收`)
+    // 注册功能
+    registerUser() {
+      // 先进行二次判断
+      this.$refs.form.validate(valid => {
+        //   可以使用...+变量名会指向剩余的属性
+        const { checkPassword, ...registerForm } = this.registerForm
+        if (valid) {
+          this.$axios({
+            url: `/accounts/register`,
+            method: "POST",
+            data: registerForm
+          })
+            .then(res => {
+              if(res.status === 200){
+                  this.$message.success('注册成功')
+                //   注册之后自动帮用户登录
+                this.$store.commit('user/setUserInfo',res.data)
+              }else{
+                  this.$message.error('注册失败')
+              }
             })
+            .catch(err => {
+              console.log(err);
+            });
         }
+      });
     }
+  }
 };
 </script>
 
