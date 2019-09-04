@@ -80,6 +80,9 @@ export default {
   methods: {
     handleClick(index){
       this.current = index
+      if(this.current === 2){
+        this.$router.push({path : '/air'})
+      }
     }
   }
 };

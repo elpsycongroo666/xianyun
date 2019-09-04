@@ -31,7 +31,7 @@ export default {
                 { required : true, message : '请输入用户名', trigger : 'blur'}
             ],
             password : [
-                { required : true, message : '请输入用户名', trigger : 'blur'}
+                { required : true, message : '请输入密码', trigger : 'blur'}
             ]
         }
     };
@@ -49,10 +49,12 @@ export default {
                       data : this.loginform
                   })
                   .then((res)=>{
-                    //   console.log(res)
+                      console.log(res)
                     if(res.status === 200){
-                        this.$message.success('登录成功，正在跳转')
-                        this.$router.push({path : '/'})
+                      // commit接收两个参数，第一个是mutations参数的方法名，第二个是传递的参数
+                      this.$store.commit('user/setUserInfo',res.data)
+                        // this.$message.success('登录成功，正在跳转')
+                        // this.$router.push({path : '/'})
                     }else{
                         this.$message.error('用户名或密码错误')
                     }
@@ -65,6 +67,8 @@ export default {
               }
           })
       }
+  },
+  mounted(){
   }
 };
 </script>
