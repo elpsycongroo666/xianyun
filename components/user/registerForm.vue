@@ -1,7 +1,7 @@
 <template>
   <el-form :model="registerForm" ref="form" class="form">
     <el-form-item class="form-item">
-      <el-input placeholder="用户名手机"></el-input>
+      <el-input placeholder="用户名手机" v-model="registerForm.username"></el-input>
     </el-form-item>
 
     <el-form-item class="form-item">
@@ -14,15 +14,15 @@
     </el-form-item>
 
     <el-form-item class="form-item">
-      <el-input placeholder="你的名字"></el-input>
+      <el-input placeholder="你的名字" v-model="registerForm.nickname"></el-input>
     </el-form-item>
 
     <el-form-item class="form-item">
-      <el-input placeholder="密码" type="password"></el-input>
+      <el-input placeholder="密码" type="password" v-model="registerForm.password"></el-input>
     </el-form-item>
 
     <el-form-item class="form-item">
-      <el-input placeholder="确认密码" type="password"></el-input>
+      <el-input placeholder="确认密码" type="password" v-model="registerForm.checkPassword"></el-input>
     </el-form-item>
 
     <el-button class="submit" type="primary">注册</el-button>
@@ -34,7 +34,11 @@ export default {
     data(){
         return{
             registerForm : {
-                
+                username : '',
+                nickname : '',
+                captcha : '',
+                password : '',
+                checkPassword :''
             }
         }
     }
