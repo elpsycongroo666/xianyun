@@ -42,7 +42,18 @@
           <nuxt-link to="/user/login" class="account-link">登录/注册</nuxt-link>
         </div>
         <div v-else>
-            {{$store.state.user.userInfo.user.nickname}}
+          <el-dropdown>
+            <span class="el-dropdown-link">
+                <!-- 头像,昵称 -->
+                <img :src="` ${$axios.defaults.baseURL}${$store.state.user.userInfo.user.defaultAvatar} `">
+                <span>{{$store.state.user.userInfo.user.nickname}}</span>
+                <i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item>退出</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
       </el-row>
     </el-row>
@@ -53,6 +64,9 @@ export default {
   methods: {
     // 用户退出
     handleLogout() {}
+  },
+  mounted(){
+      console.log(this.$store.state.user)
   }
 };
 </script>
@@ -118,6 +132,9 @@ export default {
     margin-left: 20px;
 
     &:hover {
+        &:hover{
+            cursor: pointer;
+        }
       img {
         border-color: #409eff;
       }

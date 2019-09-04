@@ -67,8 +67,6 @@ export default {
               }
           })
       }
-  },
-  mounted(){
   }
 };
 </script>
