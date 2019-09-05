@@ -29,6 +29,7 @@
                 placeholder="请搜索到达城市"
                 @select="handleDestSelect"
                 class="el-autocomplete"
+                v-model="form.destCity"
                 ></el-autocomplete>
             </el-form-item>
             
@@ -37,7 +38,8 @@
                 <el-date-picker type="date" 
                 placeholder="请选择日期" 
                 style="width: 100%;"
-                @change="handleDate">
+                @change="handleDate"
+                v-model="form.departDate">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="">
@@ -56,6 +58,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
     data(){
         return {
@@ -112,26 +115,50 @@ export default {
         // 目标城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDestSearch(value, cb){
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+             // 当输入框为空的时候 就不发送请求
+            if(!value){
+                // 并且将下面的搜索内容隐藏
+                cb([])
+                // 不发送请求
+                return false
+            }
+            this.$axios({
+                url : '/airs/city',
+                params : { name : value}
+            })
+            .then(res => {
+                // 解构出数组
+                const { data } = res.data
+                
+                // 给每个数组添加
+                var newArr = []
+                data.forEach(v => {
+                    v.value = v.name.replace('市','')
+                    // 把带有value属性的对象添加到新数组中
+                    newArr.push(v)
+                })
+                cb(newArr)
+            })
         },
        
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
             console.log(item)
+            this.form.departCode = item.sort
+            this.form.departCity = item.value
         },
 
         // 目标城市下拉选择时触发
         handleDestSelect(item) {
-            
+            this.form.destCode = item.sort
+            this.form.destCity = item.value
         },
 
         // 确认选择日期时触发
         handleDate(value){
-           
+        //    console.log(value)
+        //    console.log(moment(value).format('YYYY-MM-DD'))
+           this.form.departDate = moment(value).format('YYYY-MM-DD')
         },
 
         // 触发和目标城市切换时触发
