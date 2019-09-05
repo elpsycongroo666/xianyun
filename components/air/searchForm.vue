@@ -19,8 +19,10 @@
                 placeholder="请搜索出发城市"
                 @select="handleDepartSelect"
                 class="el-autocomplete"
+                v-model="form.departCity"
                 ></el-autocomplete>
             </el-form-item>
+
             <el-form-item label="到达城市">
                 <el-autocomplete
                 :fetch-suggestions="queryDestSearch"
@@ -29,6 +31,7 @@
                 class="el-autocomplete"
                 ></el-autocomplete>
             </el-form-item>
+            
             <el-form-item label="出发时间">
                 <!-- change 用户确认选择日期时触发 -->
                 <el-date-picker type="date" 
@@ -61,6 +64,13 @@ export default {
                 {icon: "iconfont iconshuangxiang", name: "往返"}
             ],
             currentTab: 0,
+            form : {
+                departCity : '',
+                departCode : '',
+                destCity :  '',
+                destCode : '',
+                departDate : ''
+            }
         }
     },
     methods: {
@@ -71,12 +81,32 @@ export default {
         
         // 出发城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
+        // cb调用的时必须要接受一个数组，数组中的元素必须是一个对象，对象中必须有value属性
         queryDepartSearch(value, cb){
-            cb([
-                {value: 1},
-                {value: 2},
-                {value: 3},
-            ]);
+            // 当输入框为空的时候 就不发送请求
+            if(!value){
+                // 并且将下面的搜索内容隐藏
+                cb([])
+                // 不发送请求
+                return false
+            }
+            this.$axios({
+                url : '/airs/city',
+                params : { name : value}
+            })
+            .then(res => {
+                // 解构出数组
+                const { data } = res.data
+                
+                // 给每个数组添加
+                var newArr = []
+                data.forEach(v => {
+                    v.value = v.name.replace('市','')
+                    // 把带有value属性的对象添加到新数组中
+                    newArr.push(v)
+                })
+                cb(newArr)
+            })
         },
 
         // 目标城市输入框获得焦点时触发
@@ -91,7 +121,7 @@ export default {
        
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
-            
+            console.log(item)
         },
 
         // 目标城市下拉选择时触发
