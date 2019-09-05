@@ -167,10 +167,33 @@ export default {
 
     // 提交表单是触发
     handleSubmit() {
+            const { departCity,destCity,departDate} = this.form
+         // 先判断是否选择了出发城市 如果有出发城市的话 自然也会有该城市的代码
+            if(!departCity){
+                this.$alert('出发城市不能为空','提示')
+                return
+            }
+            // 判断目标城市
+            if(!destCity){
+                this.$alert('目标城市不能为空','提示')
+                return
+            }
+            // 判断出发时间
+            if(!departDate){
+                this.$alert('请选择出发时间','提示')
+                return
+            }
+            // console.log(this.form)
 
+            // 跳转到机票列表页面 /air/flights
+            this.$router.push({
+                path : '/air/flights',
+                // url 携带的参数
+                query : this.form
+            })
     },
     mounted() {
-        
+
     }
   }
 };
