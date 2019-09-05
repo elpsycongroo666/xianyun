@@ -17,6 +17,7 @@
       <el-form-item label="出发城市">
         <!-- fetch-suggestions 返回输入建议的方法 -->
         <!-- select 点击选中建议项时触发 -->
+        <!-- 出发城市的远程搜索 -->
         <el-autocomplete
           :fetch-suggestions="queryDepartSearch"
           placeholder="请搜索出发城市"
@@ -25,7 +26,7 @@
           v-model="form.departCity"
         ></el-autocomplete>
       </el-form-item>
-
+      <!-- 到达城市的远程搜索 -->
       <el-form-item label="到达城市">
         <el-autocomplete
           :fetch-suggestions="queryDestSearch"
@@ -46,6 +47,7 @@
           v-model="form.departDate"
         ></el-date-picker>
       </el-form-item>
+      <!-- 搜索按钮 -->
       <el-form-item label>
         <el-button style="width:100%;" type="primary" icon="el-icon-search" @click="handleSubmit">搜索</el-button>
       </el-form-item>
@@ -77,7 +79,11 @@ export default {
   },
   methods: {
     // tab切换时触发
-    handleSearchTab(item, index) {},
+    handleSearchTab(index) {
+      if (index === 1) {
+        this.$alert("暂时不支持往返", "提示");
+      }
+    },
 
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
@@ -163,38 +169,44 @@ export default {
     },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+      // 结构出原来的数据
+      const { departCity , departCode , destCity ,destCode} = this.form
+      // 不能直接 this.form.departCity = this.form.destCity 不然会导致数据一样 无法切换 要先获取到原来的
+      this.form.departCity = destCity
+      this.form.departCode = destCode 
+      this.form.destCity = departCity
+      this.form.destCode = departCode
+    },
 
     // 提交表单是触发
     handleSubmit() {
-            const { departCity,destCity,departDate} = this.form
-         // 先判断是否选择了出发城市 如果有出发城市的话 自然也会有该城市的代码
-            if(!departCity){
-                this.$alert('出发城市不能为空','提示')
-                return
-            }
-            // 判断目标城市
-            if(!destCity){
-                this.$alert('目标城市不能为空','提示')
-                return
-            }
-            // 判断出发时间
-            if(!departDate){
-                this.$alert('请选择出发时间','提示')
-                return
-            }
-            // console.log(this.form)
+      const { departCity, destCity, departDate } = this.form;
+      // 先判断是否选择了出发城市 如果有出发城市的话 自然也会有该城市的代码
+      if (!departCity) {
+        this.$alert("出发城市不能为空", "提示");
+        return;
+      }
+      // 判断目标城市
+      if (!destCity) {
+        this.$alert("目标城市不能为空", "提示");
+        return;
+      }
+      // 判断出发时间
+      if (!departDate) {
+        this.$alert("请选择出发时间", "提示");
+        return;
+      }
+      // console.log(this.form)
 
-            // 跳转到机票列表页面 /air/flights
-            this.$router.push({
-                path : '/air/flights',
-                // url 携带的参数
-                query : this.form
-            })
+      // 跳转到机票列表页面 /air/flights
+      this.$router.push({
+        path: "/air/flights",
+        // url 携带的参数
+        query: this.form
+      });
     },
-    mounted() {
-
-    }
+    mounted() {}
   }
 };
 </script>
