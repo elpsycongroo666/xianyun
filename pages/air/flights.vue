@@ -20,7 +20,7 @@
           :page-sizes="[5, 10, 15, 20]"
           :page-size="5"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="10"
+          :total="total"
         ></el-pagination>
       </div>
 
@@ -39,7 +39,8 @@ export default {
   data() {
     return {
       filghtsData: [],
-      data: {}
+      data: {},
+      total : 0
     };
   },
   components: {
@@ -55,15 +56,26 @@ export default {
     }).then(res => {
       console.log(res);
       if (res.status === 200) {
-        this.filghtsData = res.data.flights;
+        // this.filghtsData = res.data.flights;
+        // 数据的总数
+        this.total = res.data.flights.length
+        // 获取第一页的值
+        this.filghtsData = res.data.flights.slice(0,5) //取到4 不到5        
       } else {
         this.$message.error("数据获取失败");
       }
     });
   },
   methods: {
-    handleCurrentChange() {},
-    handleSizeChange() {}
+    // 当且页码
+    handleCurrentChange() {
+      
+    },
+
+    // 每页展示多少条数据
+    handleSizeChange() {
+
+    }
   }
 };
 </script>
