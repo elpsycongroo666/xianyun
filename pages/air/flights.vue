@@ -64,7 +64,7 @@ export default {
         // 数据的总数
         this.total = this.filghtsData.flights.length
         // 获取第一页的值
-        this.dataList = res.data.flights.slice(0,5) //取到4 不到5        
+        this.dataList = res.data.flights.slice(0,this.pageSize) //取到4 不到5        
       } else {
         this.$message.error("数据获取失败");
       }
@@ -82,7 +82,10 @@ export default {
 
     // 每页展示多少条数据
     handleSizeChange(val) {
+    // 修改当前要显示的数据条数
+    this.pageSize = val
 
+    this.dataList = this.filghtsData.flights.slice(0,val)
 
     }
   }
