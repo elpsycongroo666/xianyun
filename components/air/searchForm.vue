@@ -24,6 +24,7 @@
           @select="handleDepartSelect"
           class="el-autocomplete"
           v-model="form.departCity"
+          @blur="blurDepart"
         ></el-autocomplete>
       </el-form-item>
       <!-- 到达城市的远程搜索 -->
@@ -34,6 +35,7 @@
           @select="handleDestSelect"
           class="el-autocomplete"
           v-model="form.destCity"
+          @blur="blurDest"
         ></el-autocomplete>
       </el-form-item>
 
@@ -74,7 +76,9 @@ export default {
         destCity: "",
         destCode: "",
         departDate: ""
-      }
+      },
+      departData: [],
+      destData: []
     };
   },
   methods: {
@@ -112,8 +116,11 @@ export default {
         });
         // 如果用户只是输入了数据 并没有点击下拉选择的时候 我们就无法获得城市名字和城市代码 不符合我们的需求
         // 那么我们就要在他输入之后 就将数据获取到 给一个默认的城市代码和城市名字
-        this.form.departCity = newArr[0].value;
-        this.form.departCode = newArr[0].sort;
+        // 默认选中的话 会引起bug 比如 输入广州 然后 删除州  会默认帮用户选中广州
+
+        // 把转换后的数组 赋值给departData
+        this.departData = newArr
+        console.log(this.departData[0].value)
         cb(newArr);
       });
     },
@@ -142,8 +149,11 @@ export default {
           // 把带有value属性的对象添加到新数组中
           newArr.push(v);
         });
-        this.form.destCity = newArr[0].value;
-        this.form.destCode = newArr[0].sort;
+        // 默认选中会有bug
+        // this.form.destCity = newArr[0].value;
+        // this.form.destCode = newArr[0].sort;
+        // 把转换后的数组 赋值给departData
+        this.destData = newArr;
         cb(newArr);
       });
     },
@@ -171,12 +181,12 @@ export default {
     // 触发和目标城市切换时触发
     handleReverse() {
       // 结构出原来的数据
-      const { departCity , departCode , destCity ,destCode} = this.form
+      const { departCity, departCode, destCity, destCode } = this.form;
       // 不能直接 this.form.departCity = this.form.destCity 不然会导致数据一样 无法切换 要先获取到原来的
-      this.form.departCity = destCity
-      this.form.departCode = destCode 
-      this.form.destCity = departCity
-      this.form.destCode = departCode
+      this.form.departCity = destCity;
+      this.form.departCode = destCode;
+      this.form.destCity = departCity;
+      this.form.destCode = departCode;
     },
 
     // 提交表单是触发
@@ -205,6 +215,17 @@ export default {
         // url 携带的参数
         query: this.form
       });
+    },
+
+    // 出发城市的失焦事件 解决bug
+    blurDepart() {
+      this.form.departCity = this.departData ? this.departData[0].value : ""
+      this.form.departCode = this.departData ? this.departData[0].sort : ""
+    },
+    // 目标城市的失焦事件
+    blurDest(){
+      this.form.destCity = this.destData ? this.destData[0].value : ""
+      this.form.destCode = this.destData ? this.destData[0].sort : ""
     },
     mounted() {}
   }

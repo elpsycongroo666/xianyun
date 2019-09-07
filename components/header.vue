@@ -1,4 +1,5 @@
 <template>
+
   <header class="header">
     <el-row type="flex" justify="space-between" class="main">
       <!-- logo -->
@@ -31,6 +32,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
+              <!-- 给第三方组件加上事件 需要加上native click.native -->
               <el-dropdown-item @click.native="handleClick">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -46,7 +48,7 @@ export default {
     handleClick(){
         // 清除登录信息
         this.$store.commit('user/clearUserInfo');
-
+        this.$router.push({path : '/user/login'})
         this.$message({
             type : "success",
             message : '退出成功'
