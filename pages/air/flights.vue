@@ -71,21 +71,34 @@ export default {
     });
   },
   methods: {
+    // 封装切换页码和切换显示条数的方法
+    setDataList(){
+      const start = (this.pageIndex -1) * this.pageSize
+      const end = start + this.pageSize
+      this.dataList = this.filghtsData.flights.slice(start,end)
+    },
     // 当且页码
     handleCurrentChange(val) {
       // 修改当前页码的值
       this.pageIndex = val
+      // 调用封装好的方法
+      this.setDataList()
 
       // 按照数学公式，切换filghtsData 数据
-      this.dataList = this.filghtsData.flights.slice((this.pageIndex - 1) * this.pageSize , this.pageIndex * this.pageSize) 
+      // this.dataList = this.filghtsData.flights.slice((this.pageIndex - 1) * this.pageSize , this.pageIndex * this.pageSize) 
     },
 
     // 每页展示多少条数据
     handleSizeChange(val) {
     // 修改当前要显示的数据条数
     this.pageSize = val
+    // 修改当前页展示数据后 返回第一页
+    this.pageIndex = 1
+    // 调用封装好的方法
+    this.setDataList()
 
-    this.dataList = this.filghtsData.flights.slice(0,val)
+
+    // this.dataList = this.filghtsData.flights.slice(0,val)
 
     }
   }
