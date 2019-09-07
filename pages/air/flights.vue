@@ -10,7 +10,8 @@
         <filghtsHeader/>
 
         <!-- 航班信息 -->
-        <filghtsList/>
+        <filghtsList v-for="(item,index) in filghtsData"
+        :key="index" :data="item"/>
       </div>
 
       <!-- 侧边栏 -->
@@ -26,10 +27,28 @@ import filghtsHeader from '@/components/air/filghtsheader.vue'
 import filghtsList from '@/components/air/filghtslist.vue'
 export default {
   data() {
-    return {};
+    return {
+      filghtsData: [],
+      data : {}
+    };
   },
   components : {
     filghtsHeader,filghtsList
+  },
+   mounted() {
+    // 返回的是一个对象
+    // 请求机票列表数据
+    this.$axios({
+      url: "/airs",
+      params: this.$route.query
+    }).then(res => {
+      console.log(res);
+      if (res.status === 200) {
+        this.filghtsData = res.data.flights;
+      } else {
+        this.$message.error("数据获取失败");
+      }
+    });
   }
 };
 </script>
