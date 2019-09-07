@@ -18,7 +18,7 @@
               <span>{{data.org_airport_name}}{{data.org_airport_quay}}</span>
             </el-col>
             <el-col :span="8" class="flight-time">
-              <span>2时20分</span>
+              <span>{{disTime}}</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
               <strong>{{data.arr_time}}</strong>
@@ -68,7 +68,33 @@ export default {
         default: {}
     }
   },
- 
+    computed : {
+        disTime(){
+            // 出发时间，返回值是数组
+            const dep = this.data.dep_time.split(':')
+            // 到达时间
+            const arr = this.data.arr_time.split(':')
+            // 如果是00时的话 那么就会是负数 所以我们要加个判断
+            if(arr[0] < dep[0]){ //判断大小的话会隐式转换
+                arr[0] += 24
+            }
+
+            // 到达的时间(分钟)
+            const arrVal = arr[0] * 60 + +arr[1]
+
+            // 出发的时间(分钟)
+            const depVal = dep[0] * 60 + +dep[1]
+
+            // 到达的-出发的
+            const hours = Math.floor((arrVal - depVal) / 60 )
+
+            // 分钟
+            const min = (arrVal - depVal) % 60
+
+            // 返回结果
+            return `${hours}时${min}分`
+        }
+    }
 };
 </script>
 

@@ -219,13 +219,19 @@ export default {
 
     // 出发城市的失焦事件 解决bug
     blurDepart() {
-      this.form.departCity = this.departData ? this.departData[0].value : ""
-      this.form.departCode = this.departData ? this.departData[0].sort : ""
+      if(!this.departData[0]){
+        return this.$message.warning('请输入出发城市')
+      }
+      this.form.departCity = this.departData[0].value 
+      this.form.departCode = this.departData[0].sort 
     },
     // 目标城市的失焦事件
     blurDest(){
-      this.form.destCity = this.destData ? this.destData[0].value : ""
-      this.form.destCode = this.destData ? this.destData[0].sort : ""
+      if(!this.destData[0]){
+        return this.$message.warning('请输入目的地城市')
+      }
+      this.form.destCity =  this.destData[0].value
+      this.form.destCode = this.destData[0].sort
     },
     mounted() {}
   }

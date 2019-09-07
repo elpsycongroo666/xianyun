@@ -7,11 +7,21 @@
         <div></div>
 
         <!-- 航班头部布局 -->
-        <filghtsHeader/>
+        <filghtsHeader />
 
         <!-- 航班信息 -->
-        <filghtsList v-for="(item,index) in filghtsData"
-        :key="index" :data="item"/>
+        <filghtsList v-for="(item,index) in filghtsData" :key="index" :data="item" />
+
+        <!-- 分页 -->
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="1"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="5"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="10"
+        ></el-pagination>
       </div>
 
       <!-- 侧边栏 -->
@@ -23,19 +33,20 @@
 </template>
 
 <script>
-import filghtsHeader from '@/components/air/filghtsheader.vue'
-import filghtsList from '@/components/air/filghtslist.vue'
+import filghtsHeader from "@/components/air/filghtsheader.vue";
+import filghtsList from "@/components/air/filghtslist.vue";
 export default {
   data() {
     return {
       filghtsData: [],
-      data : {}
+      data: {}
     };
   },
-  components : {
-    filghtsHeader,filghtsList
+  components: {
+    filghtsHeader,
+    filghtsList
   },
-   mounted() {
+  mounted() {
     // 返回的是一个对象
     // 请求机票列表数据
     this.$axios({
@@ -49,6 +60,10 @@ export default {
         this.$message.error("数据获取失败");
       }
     });
+  },
+  methods: {
+    handleCurrentChange() {},
+    handleSizeChange() {}
   }
 };
 </script>
