@@ -4,7 +4,7 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <filghtsFilters/>
+        <filghtsFilters :data="filghtsData"/> 
 
         <!-- 航班头部布局 -->
         <filghtsHeader />
@@ -40,7 +40,11 @@ export default {
   data() {
     return {
       // 数据如果是一次全部返回的情况下，那么我们就要先用一个对象先将所有的数据存储起来，在新建一个数组，获取特定情况下的数据给这个数组
-      filghtsData: {},
+      filghtsData: { //这里的filghtsData是有四个对象的 分别是info/flights/options/total
+        info : {}, //为什么要加这个info 给一个初始化的空对象? 因为我们获取数据是一个异步操作，并不知道什么时候才能拿回结果 ，如果不先定义一个空的对象的话 那么那边锁需要的这个info对象 就会是没定义的 固然里面的值也都是undefined 所以要先定义一个空的
+        options : {} // options 同理
+
+      },
       dataList : [],
       data: {},
       total : 0,
