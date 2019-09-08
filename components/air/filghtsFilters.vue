@@ -10,8 +10,9 @@
             <el-col :span="4">
                 <el-select size="mini" v-model="airport" placeholder="起飞机场" @change="handleAirport">
                     <el-option
-                    label="白云机场"
-                    value="白云机场"
+                    v-for="(item,index) in data.options.airport" :key="index"
+                    :label="item"
+                    :value="item"
                     >
                     </el-option>
                 </el-select>
@@ -19,8 +20,9 @@
             <el-col :span="4">
                 <el-select size="mini" v-model="flightTimes"  placeholder="起飞时间" @change="handleFlightTimes">
                     <el-option
-                    label="00:00 - 06:00"
-                    value="1"
+                    v-for="(item,index) in data.options.flightTimes" :key="index"
+                    :label="`${item.from}:00 - ${item.to}:00`"
+                    :value="`${item.from},${item.to}`"
                     >
                     </el-option>
                 </el-select>
@@ -28,16 +30,18 @@
             <el-col :span="4">
                 <el-select size="mini" v-model="company"  placeholder="航空公司" @change="handleCompany">
                     <el-option
-                    label="厦门航空"
-                    value="厦门航空">
+                    v-for="(item,index) in data.options.company" :key="index"
+                    :label="item"
+                    :value="item">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="4">
                 <el-select size="mini" v-model="airSize" placeholder="机型" @change="handleAirSize">
                     <el-option
-                    label="大"
-                    value="大">
+                    v-for="(item,index) in airSizeList" :key="index"
+                    :label="item.label"
+                    :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
@@ -64,6 +68,11 @@ export default {
             flightTimes: "",    // 出发时间
             company: "",        // 航空公司
             airSize: "",        // 机型大小
+            airSizeList : [
+                {label : '大' , value: 'L'},
+                {label : '中' , value: 'M'},
+                {label : '小' , value: 'S'}
+            ]
         }
     },
     props : {
