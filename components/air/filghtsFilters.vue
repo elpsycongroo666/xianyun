@@ -129,7 +129,16 @@ export default {
 
     // 撤销条件时候触发
     handleFiltersCancel() {
-        
+        // 清空列表中的数据
+        this.airport = "";
+        this.flightTimes = "";
+        this.company = "";
+        this.airSize = "";
+        // 将页面返回到第一页
+        this.pageIndex = 1;
+
+        // 返回全部的数据
+        this.$emit('setDataList',this.data.flights)
     }
   }
 };
