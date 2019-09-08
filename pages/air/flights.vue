@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import filghtsHeader from "@/components/air/filghtsheader.vue";
-import filghtsList from "@/components/air/filghtslist.vue";
+import filghtsHeader from "@/components/air/filghtsHeader.vue";
+import filghtsList from "@/components/air/filghtsList.vue";
 import filghtsFilters from "@/components/air/filghtsFilters.vue";
 export default {
   data() {
