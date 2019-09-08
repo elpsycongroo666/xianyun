@@ -25,7 +25,7 @@
       </div>
 
       <!-- 侧边栏 -->
-      <flightsAside/>
+      <flightsAside />
     </el-row>
   </section>
 </template>
@@ -44,16 +44,16 @@ export default {
         info: {}, //为什么要加这个info 给一个初始化的空对象? 因为我们获取数据是一个异步操作，并不知道什么时候才能拿回结果 ，如果不先定义一个空的对象的话 那么那边锁需要的这个info对象 就会是没定义的 固然里面的值也都是undefined 所以要先定义一个空的
         options: {} // options 同理
       },
-      cacheFlightsData : {
-          info : {},
-          options : {}
+      cacheFlightsData: {
+        info: {},
+        options: {}
       },
       dataList: [],
       data: {},
       total: 0,
       pageSize: 5,
       pageIndex: 1
-    };
+    }
   },
   components: {
     flightsHeader,
@@ -61,31 +61,39 @@ export default {
     flightsFilters,
     flightsAside
   },
+  watch : {
+    $route(){
+      this.getData()
+    }
+  },
   mounted() {
     // 返回的是一个对象
-    // 请求机票列表数据
-    this.$axios({
-      url: "/airs",
-      params: this.$route.query
-    }).then(res => {
-      console.log(res);
-      if (res.status === 200) {
-        // 赋值给总数据
-        this.flightsData = res.data;
-
-        // 赋值给缓存总数据
-        this.cacheFlightsData = {...res.data} // 深拷贝 将原来的数据进行深拷贝 使得每次筛选的时候 数据都是一样的 不会被覆盖
-
-        // 数据的总数
-        this.total = this.flightsData.flights.length;
-        // 获取第一页的值
-        this.dataList = res.data.flights.slice(0, this.pageSize); //取到4 不到5
-      } else {
-        this.$message.error("数据获取失败");
-      }
-    });
+    this.getData()
   },
   methods: {
+    getData() {
+      // 请求机票列表数据
+      this.$axios({
+        url: "/airs",
+        params: this.$route.query
+      }).then(res => {
+        console.log(res);
+        if (res.status === 200) {
+          // 赋值给总数据
+          this.flightsData = res.data;
+
+          // 赋值给缓存总数据
+          this.cacheFlightsData = { ...res.data }; // 深拷贝 将原来的数据进行深拷贝 使得每次筛选的时候 数据都是一样的 不会被覆盖
+
+          // 数据的总数
+          this.total = this.flightsData.flights.length;
+          // 获取第一页的值
+          this.dataList = res.data.flights.slice(0, this.pageSize); //取到4 不到5
+        } else {
+          this.$message.error("数据获取失败");
+        }
+      });
+    },
     // 封装切换页码和切换显示条数的方法
     // 该方法传递给子组件，用于修改dataList
     setDataList(arr) {
@@ -96,13 +104,13 @@ export default {
         (this.pageIndex - 1) * this.pageSize,
         this.pageIndex * this.pageSize
       );
-      console.log(this.dataList)
+      console.log(this.dataList);
       this.total = arr.length;
     },
     // 每页条数切换时候触发, val是条数
     handleSizeChange(val) {
       this.pageSize = val;
-      console.log(this.flightsData.flights,123)
+      console.log(this.flightsData.flights, 123);
 
       // 重新回到第一页
       this.pageIndex = 1;
