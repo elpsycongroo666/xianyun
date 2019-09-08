@@ -4,13 +4,13 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <filghtsFilters :data="cacheFlightsData" @setDataList="setDataList" />
+        <flightsFilters :data="cacheFlightsData" @setDataList="setDataList" />
 
         <!-- 航班头部布局 -->
-        <filghtsHeader />
+        <flightsHeader />
 
         <!-- 航班信息 -->
-        <filghtsList v-for="item in dataList" :key="item.id" :data="item" />
+        <flightsList v-for="item in dataList" :key="item.id" :data="item" />
 
         <!-- 分页 -->
         <el-pagination
@@ -25,17 +25,16 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside">
-        <!-- 侧边栏组件 -->
-      </div>
+      <flightsAside/>
     </el-row>
   </section>
 </template>
 
 <script>
-import filghtsHeader from "@/components/air/filghtsHeader.vue";
-import filghtsList from "@/components/air/filghtsList.vue";
-import filghtsFilters from "@/components/air/filghtsFilters.vue";
+import flightsHeader from "@/components/air/flightsHeader.vue";
+import flightsList from "@/components/air/flightsList.vue";
+import flightsFilters from "@/components/air/flightsFilters.vue";
+import flightsAside from "@/components/air/flightsAside.vue";
 export default {
   data() {
     return {
@@ -57,9 +56,10 @@ export default {
     };
   },
   components: {
-    filghtsHeader,
-    filghtsList,
-    filghtsFilters
+    flightsHeader,
+    flightsList,
+    flightsFilters,
+    flightsAside
   },
   mounted() {
     // 返回的是一个对象
