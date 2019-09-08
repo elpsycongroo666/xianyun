@@ -208,6 +208,12 @@ export default {
         return;
       }
       // console.log(this.form)
+      // 把本地存储先拿出来
+      const arr = JSON.parse(localStorage.getItem('airs')) || [];
+      arr.push(this.form);
+
+      // 把搜索的条件保存到本地
+      localStorage.setItem('airs',JSON.stringify(arr))
 
       // 跳转到机票列表页面 /air/flights
       this.$router.push({
