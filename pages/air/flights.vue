@@ -4,13 +4,13 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <filghtsFilters/>
 
         <!-- 航班头部布局 -->
         <filghtsHeader />
 
         <!-- 航班信息 -->
-        <filghtsList v-for="(item,index) in dataList" :key="index" :data="item" />
+        <filghtsList v-for="item in dataList" :key="item.id" :data="item" />
 
         <!-- 分页 -->
         <el-pagination
@@ -35,6 +35,7 @@
 <script>
 import filghtsHeader from "@/components/air/filghtsheader.vue";
 import filghtsList from "@/components/air/filghtslist.vue";
+import filghtsFilters from '@/components/air/filghtsFilters.vue'
 export default {
   data() {
     return {
@@ -49,7 +50,8 @@ export default {
   },
   components: {
     filghtsHeader,
-    filghtsList
+    filghtsList,
+    filghtsFilters
   },
   mounted() {
     // 返回的是一个对象

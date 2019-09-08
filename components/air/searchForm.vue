@@ -119,8 +119,8 @@ export default {
         // 默认选中的话 会引起bug 比如 输入广州 然后 删除州  会默认帮用户选中广州
 
         // 把转换后的数组 赋值给departData
-        this.departData = newArr
-        console.log(this.departData[0].value)
+        this.departData = newArr;
+        console.log(this.departData[0].value);
         cb(newArr);
       });
     },
@@ -219,19 +219,21 @@ export default {
 
     // 出发城市的失焦事件 解决bug
     blurDepart() {
-      if(!this.departData[0]){
-        return this.$message.warning('请输入出发城市')
+      if(!this.departData[0].value){
+          this.departData = []
+          return
       }
-      this.form.departCity = this.departData[0].value 
-      this.form.departCode = this.departData[0].sort 
+      this.form.departCity = this.departData[0].value ? this.departData[0].value : ""
+      this.form.departCode = this.departData[0].sort ? this.departData[0].sort : ""
     },
     // 目标城市的失焦事件
-    blurDest(){
-      if(!this.destData[0]){
-        return this.$message.warning('请输入目的地城市')
+    blurDest() {
+      if (!this.destData[0].value) {
+        this.destData = []
+        return
       }
-      this.form.destCity =  this.destData[0].value
-      this.form.destCode = this.destData[0].sort
+      this.form.destCity = this.destData[0].value ? this.destData[0].value : ""
+      this.form.destCode = this.destData[0].sort ? this.destData[0].sort : ""
     },
     mounted() {}
   }
