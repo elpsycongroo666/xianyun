@@ -195,6 +195,8 @@ export default {
       if (res.status === 200) {
         // 将整个数据的对象都存起来
         this.infoData = res.data;
+        // 调用store的方法，把infoData存到store中
+        this.$store.commit('air/setInfoData',this.infoData)
       }
     });
   }
