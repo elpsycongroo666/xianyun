@@ -67,6 +67,7 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+    {{allPrice}}
   </div>
 </template>
 
@@ -91,6 +92,26 @@ export default {
       air: "", // 航班id
       captcha: "" // 验证码
     };
+  },
+  computed : {
+    allPrice (){
+      if(!this.infoData.seat_infos){
+        return 0
+      }
+      let price = 0;
+      // 机票单价
+      price += this.infoData.seat_infos.org_settle_price
+      // 燃油费
+      price += this.infoData.airport_tax_audlet
+      // 保险 
+      price += 30 * this.insurances.length
+      // 根据人数叠加
+      price *= this.users.length
+      // 存储到本地
+      this.$store.commit('air/setAllPrice',price)
+
+      return price
+    }
   },
   methods: {
     // 添加乘机人
@@ -191,7 +212,7 @@ export default {
       url: `/airs/${id}`,
       params: { seat_xid }
     }).then(res => {
-      console.log(res);
+      console.log(res,123);
       if (res.status === 200) {
         // 将整个数据的对象都存起来
         this.infoData = res.data;
