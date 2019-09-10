@@ -35,7 +35,8 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in infoData.insurances" :key="index">
-          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border ></el-checkbox>
+          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border 
+          @change="handleChange(item.id)" ></el-checkbox>
         </div>
       </div>
     </div>
@@ -77,7 +78,9 @@ export default {
           username: "",
           id: ""
         }
-      ]
+      ],
+    //   保险数据id的集合
+    insurances : []
     };
   },
   methods: {
@@ -89,7 +92,22 @@ export default {
         id: ""
       });
     },
-
+    // 选中保险时触发
+    handleChange(id){
+        // 先判断
+        // this.insurances这个数组中原本的是否存在该id 如果存在 就不添加了
+        const index = this.insurances.indexOf(id);
+        if(index > -1){ 
+            // 出现-1就是该数组中不存在该数据
+            // 这里是 > -1 所以是存在
+            this.insurances.splice(index,1)
+        }else{
+            this.insurances.push(id)
+        }
+        // console.log(id) //每次点击都会触发
+        // this.insurances.push(id)
+        // console.log(this.insurances) 
+    },
     // 移除乘机人
     handleDeleteUser(index) {
       // 把users中的某一项删除掉
