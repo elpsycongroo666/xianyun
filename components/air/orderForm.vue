@@ -150,9 +150,19 @@ export default {
           contactPhone : this.contactPhone,
           invoice : this.invoice,
           seat_xid : this.$route.query.seat_xid,
-          air : this.$route.query.id
+          air : this.$route.query.id,
+          captcha : this.captcha
       }
-      console.log(data)
+      this.$axios({
+          url : '/airorders',
+          method : 'POST',
+        //   可以给接口单独加上请求头
+          headers : { Authorization : `Bearer ${this.$store.state.user.userInfo.token}`},
+          data
+      })
+      .then(res => {
+          console.log(res)
+      })
     }
   },
   mounted() {
