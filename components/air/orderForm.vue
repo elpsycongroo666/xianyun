@@ -199,7 +199,12 @@ export default {
           data
       })
       .then(res => {
+        const {id} = res.data.data
           console.log(res)
+          this.$router.push({
+            path : '/air/pay',
+            query : {id}
+          })
       })
     }
   },
