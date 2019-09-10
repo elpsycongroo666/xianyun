@@ -142,6 +142,23 @@ export default {
     },
     // 提交订单
     handleSubmit() {
+        // 表单验证
+        if(!this.users[0].username || !this.users[0].id){
+            return this.$message('乘机人不能为空')
+        }
+        
+        // 联系人
+        if(!this.contactName){
+            return this.$message('联系人不能为空')
+        }
+
+        if(!this.contactPhone){
+            return this.$message('联系电话不能为空')
+        }
+
+        if(!this.captcha) {
+            return this.$message('验证码不能为空')
+        }
     //   console.log(this.users);
       const data = {
           users : this.users,
