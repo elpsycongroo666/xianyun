@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="air-column">
-      <h2>剩机人</h2>
+      <h2>乘机人</h2>
       <el-form class="member-info">
         <div class="member-info-item" v-for="(item, index) in users" :key="index">
           <el-form-item label="乘机人类型">
@@ -35,8 +35,11 @@
       <h2>保险</h2>
       <div>
         <div class="insurance-item" v-for="(item,index) in infoData.insurances" :key="index">
-          <el-checkbox :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" border 
-          @change="handleChange(item.id)" ></el-checkbox>
+          <el-checkbox
+            :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`"
+            border
+            @change="handleChange(item.id)"
+          ></el-checkbox>
         </div>
       </div>
     </div>
@@ -46,11 +49,11 @@
       <div class="contact">
         <el-form label-width="60px">
           <el-form-item label="姓名">
-            <el-input></el-input>
+            <el-input v-model="contactName"></el-input>
           </el-form-item>
 
           <el-form-item label="手机">
-            <el-input placeholder="请输入内容">
+            <el-input placeholder="请输入内容" v-model="contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
               </template>
@@ -58,7 +61,7 @@
           </el-form-item>
 
           <el-form-item label="验证码">
-            <el-input></el-input>
+            <el-input v-model="captcha"></el-input>
           </el-form-item>
         </el-form>
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
@@ -79,8 +82,14 @@ export default {
           id: ""
         }
       ],
-    //   保险数据id的集合
-    insurances : []
+      //   保险数据id的集合
+      insurances: [],
+      contactName: "", // 联系人名字
+      contactPhone: "", // 联系人电话
+      invoice: false, // 是否需要发票
+      seat_xid: "", // 座位id
+      air: "", // 航班id
+      captcha: "" // 验证码
     };
   },
   methods: {
@@ -93,20 +102,20 @@ export default {
       });
     },
     // 选中保险时触发
-    handleChange(id){
-        // 先判断
-        // this.insurances这个数组中原本的是否存在该id 如果存在 就不添加了
-        const index = this.insurances.indexOf(id);
-        if(index > -1){ 
-            // 出现-1就是该数组中不存在该数据
-            // 这里是 > -1 所以是存在
-            this.insurances.splice(index,1)
-        }else{
-            this.insurances.push(id)
-        }
-        // console.log(id) //每次点击都会触发
-        // this.insurances.push(id)
-        // console.log(this.insurances) 
+    handleChange(id) {
+      // 先判断
+      // this.insurances这个数组中原本的是否存在该id 如果存在 就不添加了
+      const index = this.insurances.indexOf(id);
+      if (index > -1) {
+        // 出现-1就是该数组中不存在该数据
+        // 这里是 > -1 所以是存在
+        this.insurances.splice(index, 1);
+      } else {
+        this.insurances.push(id);
+      }
+      // console.log(id) //每次点击都会触发
+      // this.insurances.push(id)
+      // console.log(this.insurances)
     },
     // 移除乘机人
     handleDeleteUser(index) {
@@ -116,10 +125,34 @@ export default {
     },
 
     // 发送手机验证码
-    handleSendCaptcha() {},
+    handleSendCaptcha() {
+      this.$axios({
+        url: `/captchas`,
+        method: "POST",
+        data: {
+          tel: this.contactPhone
+        }
+      }).then(res => {
+        // console.log(res)
+        // 使用对象的结构
+        const { code } = res.data;
+        // 提示信息
+        this.$alert(`验证码已发送，注意查收`);
+      });
+    },
     // 提交订单
     handleSubmit() {
-      console.log(this.users);
+    //   console.log(this.users);
+      const data = {
+          users : this.users,
+          insurances : this.insurances,
+          contactName : this.contactName,
+          contactPhone : this.contactPhone,
+          invoice : this.invoice,
+          seat_xid : this.$route.query.seat_xid,
+          air : this.$route.query.id
+      }
+      console.log(data)
     }
   },
   mounted() {
@@ -134,7 +167,7 @@ export default {
       console.log(res);
       if (res.status === 200) {
         // 将整个数据的对象都存起来
-        this.infoData = res.data
+        this.infoData = res.data;
       }
     });
   }
