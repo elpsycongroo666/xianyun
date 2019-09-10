@@ -53,8 +53,8 @@ export default {
                     if(res.status === 200){
                       // commit接收两个参数，第一个是mutations参数的方法名，第二个是传递的参数
                       this.$store.commit('user/setUserInfo',res.data)
-                        this.$message.success('登录成功，正在跳转')
-                        this.$router.push({path : '/'})
+                      // 登录之后返回上一页
+                      this.$router.back()
                     }else{
                         this.$message.error('用户名或密码错误')
                     }
