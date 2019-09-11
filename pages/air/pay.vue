@@ -3,7 +3,7 @@
     <div class="main">
       <div class="pay-title">
         支付总金额
-        <span class="pay-price">￥ {{$store.state.air.allPrice}}</span>
+        <span class="pay-price">￥ {{order.price}}</span>
       </div>
       <div class="pay-main">
         <h4>微信支付</h4>
@@ -26,25 +26,74 @@
 <script>
 import QRCode from "qrcode";
 export default {
+  data() {
+    return {
+      // 订单详情
+      order: {},
+      // 定时器的变量
+      timer: null
+    };
+  },
   mounted() {
     // 这个方法是有缺陷的，不是100%准确
     // userInfo在页面加载完成才赋值
-    const {id} = this.$route.query
+    const { id } = this.$route.query;
     setTimeout(v => {
       this.$axios({
         url: `/airorders/${id}`,
-        headers : {Authorization : `Bearer ${this.$store.state.user.userInfo.token}` }
-      })
-      .then(res => {
-        console.log(res)
-        const {payInfo} = res.data
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        }
+      }).then(res => {
+        // console.log(res)
+        const { payInfo } = res.data;
+        // 存储一个大的数据对象
+        this.order = res.data;
         // 生成二维码到canvas
-        const stage = document.querySelector('#qrcode-stage');
-        QRCode.toCanvas(stage,payInfo.code_url,{
-          width : 300
-        })
-      })
+        const stage = document.querySelector("#qrcode-stage");
+        QRCode.toCanvas(stage, payInfo.code_url, {
+          width: 300
+        });
+        // 轮询，每隔3秒钟就查询
+        this.timer = setInterval(()=>{
+          this.getPayStatus();
+        },3000)
+      });
     }, 200);
+  },
+   // 组件卸载时候触发
+  destroyed(){
+            // 当我们切换到其他页面的时候 请求也还在继续 所以我们要清除请求
+      clearInterval(this.timer);
+      this.timer = null
+  },
+  methods: {
+    // 获取当前支付状态
+    getPayStatus() {
+      this.$axios({
+        url: "/airorders/checkpay",
+        headers: {
+          Authorization: `Bearer ${this.$store.state.user.userInfo.token}`
+        },
+        method: "post",
+        data: {
+          id: this.$route.query,
+          nonce_str: this.order.price,
+          out_trade_no: this.order.orderNo
+        }
+      }).then(res => {
+        console.log(res, 123);
+        const { statusTxt } = res.data
+        // statusTxt === "支付完成" 清除定时器
+        if(statusTxt === '支付完成'){
+          clearInterval(this.timer);
+          this.timer = null;
+
+          // 提示用户支付成功
+          this.$alert('支付成功','提示')
+        }
+      });
+    }
   }
 };
 </script>
